@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+<!-- used bootstrap for designing much more interactive interface -->
+<head>
+    <!-- <style> 
+        .field{
+            position: relative;
+        
+        }
+        .field output{
+            color:#565656;
+            background:none;
+            padding:0.625rem;
+            border:  2px solid #030104;
+        
+        }
+        
+        .field label{
+            position:absolute;
+            top:0;
+            left:0;
+            translate: 0.625rem 0.625rem;
+            color:#030104;
+            background-color: #efe4f7;
+            padding-inline: 0.25rem;
+            border: 2px solid transparent;
+            pointer-events: none;
+            transition: translate 250ms,
+                        background-color 250ms,
+                        border-color 250ms;
+        
+        
+        }
+        .field:focus-within label,
+        .field:not(:has(:placeholder-shown))
+        label{
+            translate: 0.625rem -1rem;
+            border-color: #030104;
+        
+        }
+        .field::placeholder{
+            color:transparent;
+        }
+    </style> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>CUSTOMER MAINTENANCE PAGE (ASHIQ PROJECT)</title>
+</head>
+
+<!-- to create the interface for the user -->
+<body>
+    <div class="mainbody container-fluid w-50 mt-5 ml-5 border border-black">
+     <!-- created textboxes as per the requirement    -->
+        <div class="container">
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox1">Customer#</label>
+                    <input type="text" id="textBox1" class="form-control">
+                </div> 
+                <!-- <div class="field">
+                    <input type="text" id="username" placeholder="..."/>
+                    <label for="username">#Customer</label> -->
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox2">First Name</label>
+                    <input type="text" id="textBox2" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox3">Last Name </label>
+                    <input type="text" id="textBox3" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox4">Address</label>
+                    <input type="text" id="textBox4" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox5">City</label>
+                    <input type="text" id="textBox5" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox6">Province</label>
+                    <input type="text" id="textBox6" class="form-control">
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col">
+                    <label class="title" for="textBox7">Postal</label>
+                    <input type="text" id="textBox7" class="form-control">
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- created buttons and assigned onclick functions respectively -->
+        <div class="dropbtn mt-4 mb-2">
+            <div class="d-flex flex-wrap">
+                <button type="button" class="btn btn-outline-dark mb-2 me-2" onclick="cleartextbox();">New</button>
+                <button type="button" class="btn btn-outline-dark mb-2 me-2" onclick="addButton();">Add</button>
+                <button type="button" class="btn btn-outline-dark mb-2 me-2" onclick="updateButton();">Update</button>
+                <button type="button" class="btn btn-outline-dark mb-2 me-2" onclick="deletebutton();">Delete</button>
+                <button type="button" class="btn btn-outline-dark mb-2 me-2" onclick="findCustomer();">Find</button>
+            </div>
+        </div>
+        
+    </div>
+<script>
+    function cleartextbox() {
+        // function to clear the textboxes
+        document.getElementById('textBox1').value = ''; 
+        document.getElementById('textBox2').value = ''; 
+        document.getElementById('textBox3').value = ''; 
+        document.getElementById('textBox4').value = ''; 
+        document.getElementById('textBox5').value = ''; 
+        document.getElementById('textBox6').value = ''; 
+        document.getElementById('textBox7').value = ''; 
+        
+        
+        };
+    
+    function addButton() {
+            const customerNumber = $('#textBox1').val();
+            const firstName = $('#textBox2').val();
+            const lastName = $('#textBox3').val();
+            const address = $('#textBox4').val();
+            const city = $('#textBox5').val();
+            const province = $('#textBox6').val();
+            const postal = $('#textBox7').val();
+            // Retrieve textbox values
+        
+            // to check if the textboxes are empty or not 
+            if (!customerNumber || !firstName || !lastName || !address || !city || !province || !postal) {
+              alert('Please fill all fields');
+              return;
+            }
+            //creating customer data objects
+            const customerData = {
+              customerNumber,
+              firstName,
+              lastName,
+              address,
+              city,
+              province,
+              postal
+              
+            };
+        
+            // Send a POST request to the server to add a new customer
+            $.ajax({
+              url: '/addCustomer', 
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(customerData),
+              success: function(response) {
+                console.log(response.message); // Log success message
+                alert(response.message);// Handle success (display message, refresh data, etc.)
+                alert(response.message || 'Customer added successfully');
+              },
+              error: function(xhr, status, error) {
+                const errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'Error adding customer/ customer';
+                 //console.error(errorMessage); // Log error message
+                alert(errorMessage || 'Error adding customer');// Display error message in an alert
+                // Additional handling if needed
+              }
+            });
+        };
+        function updateButton() {
+            //function to update values on a existing customerNumber
+            const customerData = {
+                customerNumber: $('#textBox1').val(),
+                firstName: $('#textBox2').val(),
+                lastName: $('#textBox3').val(),
+                address: $('#textBox4').val(),
+                city: $('#textBox5').val(),
+                province: $('#textBox6').val(),
+                postal: $('#textBox7').val(),
+               // retrieve the data from textboxes
+            };
+    
+            $.ajax({
+                url: '/updateCustomer',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(customerData),
+                success: function (response) {
+                    console.log(response); 
+                    alert(response.message || 'Customer updated successfully');
+                },
+                error: function (error) {
+                    alert('Error updating customer'); 
+                }
+            });
+        }
+    function deletebutton() {
+            //function to delete a record
+            const customerNumber = document.getElementById('textBox1').value;
+            //taking customerNumber to delete record
+            if (!customerNumber) {
+                alert('Please provide a customer number to delete');
+                return;
+            }
+
+            const confirmDelete = confirm('Are you sure you want to delete this customer?');
+
+            if (confirmDelete) {
+                $.ajax({
+                    url: '/deleteCustomer',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ customerNumber }),
+                    success: function (response) {
+                        alert(response.message || 'Customer deleted successfully');
+                        clearFields(); // Function to clear all fields
+                    },
+                    error: function (error) {
+                        alert('ERROR deleting customer/ customer does not exist');
+                    }
+                });
+            }
+        }
+        
+    function findCustomer() {
+            //function to find a customer using customerNumber
+            const customerNumber = document.getElementById('textBox1').value;
+
+            if (!customerNumber) {
+                alert('Please provide a customer number to find');
+                return;
+            }
+
+            $.ajax({
+                url: '/findCustomer',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ customerNumber }),
+                success: function (response) {
+                    const customerData = response.customerData;
+
+                    if (customerData) {
+                        textbox(customerData); // Function to fill the textboxes
+                    } else {
+                        alert('No customer data found');
+                    }
+                },
+                error: function (error) {
+                    alert('Error finding customer');
+                }
+            });
+        }
+
+        function textbox(data) {
+            // to fill input fields with data retrieved from server
+            document.getElementById('textBox2').value = data.firstName;
+            document.getElementById('textBox3').value = data.lastName;
+            document.getElementById('textBox4').value = data.address;
+            document.getElementById('textBox5').value = data.city;
+            document.getElementById('textBox6').value = data.province;
+            document.getElementById('textBox7').value = data.postal;
+            
+        }
+        </script>
+</body>
